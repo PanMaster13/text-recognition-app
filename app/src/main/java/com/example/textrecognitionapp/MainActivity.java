@@ -3,6 +3,7 @@ package com.example.textrecognitionapp;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,8 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextDetector;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,9 +30,9 @@ public class MainActivity extends AppCompatActivity {
     // Variable declaration
     private Button captureImageBtn, extractTextBtn;
     private ImageView capturedImage;
-    private TextView extractedText;
     private Bitmap imageBitmap;
-    private String tempText;
+    private ArrayList<String> words = new ArrayList<>();
+    private final String[] unwantedWords = {"Quo-Lab A1C", "Time", "Time:", "Date", "Date:", "Result", "Result:", "Lot", "Lot:", "Inst ID", "Inst ID:", "Test ID", "Test ID:", "Operator", "Operator:"};
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -39,15 +42,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         capturedImage = findViewById(R.id.capturedImage);
-        extractedText = findViewById(R.id.extractedText);
         captureImageBtn = findViewById(R.id.captureImageBtn);
         extractTextBtn = findViewById(R.id.extractTextBtn);
+        imageBitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.placeholder);
+        capturedImage.setImageBitmap(imageBitmap);
 
         // Calls camera activity function when 'Take Picture' button is pressed
         captureImageBtn.setOnClickListener(v -> {
             dispatchTakePictureIntent();
         });
 
+        // Calls function to utilise Firebase Vision ML Kit text recognition to extract text from image
         extractTextBtn.setOnClickListener(v -> {
             extractTextFromImage();
         });
@@ -72,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
             imageBitmap = (Bitmap) extras.get("data");
             capturedImage.setImageBitmap(imageBitmap);
             Toast.makeText(getApplicationContext(), "Image captured successfully!", Toast.LENGTH_SHORT).show();
-            extractedText.setText("");
         }
     }
 
@@ -84,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
             displayImageText(firebaseVisionText);
         }).addOnFailureListener(e -> { // Failure listener
             Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            Log.d("ERROR", e.getMessage());
         });
     }
 
@@ -94,10 +97,18 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Error: No text found in image provided!", Toast.LENGTH_SHORT).show();
         } else {
             for (FirebaseVisionText.Block block: firebaseVisionText.getBlocks()) {
-                String currentText = extractedText.getText().toString();
-                tempText = block.getText();
-                extractedText.setText(currentText + tempText);
+                String[] textArray = block.getText().split("\\r?\\n");
+                words.addAll(Arrays.asList(textArray));
             }
+            for (String unwanted: unwantedWords) {
+                words.remove(unwanted);
+            }
+
+            // Transfers desired values from image to Form Activity & finishes this activity to reset data
+            Intent toFormIntent = new Intent(getApplicationContext(), FormActivity.class);
+            toFormIntent.putStringArrayListExtra("data", words);
+            startActivity(toFormIntent);
+            finish();
         }
     }
 }
