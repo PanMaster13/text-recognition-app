@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FormActivity">
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/timeView"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
@@ -17,13 +17,13 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="Time" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dateView"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
@@ -34,14 +34,14 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="Date" />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/resultView1"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
@@ -52,13 +52,13 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="Result 1" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/resultView2"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
@@ -69,13 +69,13 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="Result View 2" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/resultView3"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
@@ -86,13 +86,13 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="Result View 3" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/resultView4"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
@@ -103,13 +103,13 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="Result View 4" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/lotView"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
@@ -120,13 +120,13 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="Lot View" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/instIdView"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
@@ -137,13 +137,13 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="Inst ID" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/testIdView"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
@@ -154,13 +154,13 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="Test ID" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/operatorView"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
@@ -171,11 +171,11 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="Operator" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/submitBtn"
@@ -190,4 +190,4 @@
         android:layout_marginRight="10dp"
         android:background="@android:color/holo_orange_light"/>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
