@@ -2,9 +2,13 @@ package com.example.textrecognitionapp;
 
 import android.content.Intent;
 import com.google.android.material.textfield.TextInputLayout;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -14,7 +18,7 @@ public class FormActivity extends AppCompatActivity {
 
     // Variable declaration
     private ArrayList<TextInputLayout> textInputLayouts = new ArrayList<>();
-    private TextInputLayout timeView, dateView, resultView1, resultView2, resultView3, resultView4, lotView, instIdView, testIdView, operatorView;
+    private TextInputLayout timeView, dateView, resultView1, resultView2, lotView, instIdView, testIdView, operatorView;
     private Button submitBtn;
 
     @Override
@@ -29,8 +33,6 @@ public class FormActivity extends AppCompatActivity {
         dateView = findViewById(R.id.dateView);
         resultView1 = findViewById(R.id.resultView1);
         resultView2 = findViewById(R.id.resultView2);
-        resultView3 = findViewById(R.id.resultView3);
-        resultView4 = findViewById(R.id.resultView4);
         lotView = findViewById(R.id.lotView);
         instIdView = findViewById(R.id.instIdView);
         testIdView = findViewById(R.id.testIdView);
@@ -42,14 +44,13 @@ public class FormActivity extends AppCompatActivity {
         textInputLayouts.add(dateView);
         textInputLayouts.add(resultView1);
         textInputLayouts.add(resultView2);
-        textInputLayouts.add(resultView3);
-        textInputLayouts.add(resultView4);
         textInputLayouts.add(lotView);
         textInputLayouts.add(instIdView);
         textInputLayouts.add(testIdView);
         textInputLayouts.add(operatorView);
 
-        words.set(4, words.get(4).split("m")[0]);
+        words.set(2, words.get(2).replace("%", ""));
+        words.set(3, words.get(3).split("m")[0]);
 
         // Loop through word list and autofill text input layouts
         for (int i = 0; i < words.size(); i++) {
@@ -66,13 +67,17 @@ public class FormActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Uploading data to database.", Toast.LENGTH_SHORT).show();
             });
 
-            builder.setNegativeButton("Go Back", ((dialog, which) -> {
+            builder.setNegativeButton("Go Back", (dialog, which) -> {
                 dialog.cancel();
-            }));
+            });
 
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
         });
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeAsUpIndicator(R.drawable.back_arrow);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -81,5 +86,15 @@ public class FormActivity extends AppCompatActivity {
         Intent backToMainIntent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(backToMainIntent);
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

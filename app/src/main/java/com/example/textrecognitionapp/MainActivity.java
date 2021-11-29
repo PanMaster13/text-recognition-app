@@ -1,14 +1,16 @@
 package com.example.textrecognitionapp;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
 import android.os.Bundle;
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView capturedImage;
     private Bitmap imageBitmap;
     private ArrayList<String> words = new ArrayList<>();
-    private final String[] unwantedWords = {"Quo-Lab A1C", "Time", "Time:", "Date", "Date:", "Result", "Result:", "Lot", "Lot:", "Inst ID", "Inst ID:", "Test ID", "Test ID:", "Operator", "Operator:"};
+    private final String[] unwantedWords = {"Quo-Lab A1C", "Time", "Time:", "Date", "Date:", "Result", "Result:", "DCCT", "IFCC", "Lot", "Lot:", "Inst ID", "Inst ID:", "Test ID", "Test ID:", "Operator", "Operator:"};
 
     private String mCurrentPhotoPath;
 
@@ -66,10 +68,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Function for launching camera activity to capture image
     private void dispatchTakePictureIntent() {
-
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Create the File where the photo should go
-        Toast.makeText(getApplicationContext(), "TEST", Toast.LENGTH_SHORT).show();
         File photoFile = null;
         try {
             photoFile = createImageFile();
@@ -139,25 +139,36 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         // When previous activity was from 'dispatchTakePictureIntent' function
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             galleryAddPic();
             setPic();
-            Toast.makeText(getApplicationContext(), "Image captured successfully!", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     // Function to extract text from image
     private void extractTextFromImage() {
-        FirebaseVisionImage firebaseVisionImage = FirebaseVisionImage.fromBitmap(imageBitmap);
-        FirebaseVisionTextDetector firebaseVisionTextDetector = FirebaseVision.getInstance().getVisionTextDetector();
-        firebaseVisionTextDetector.detectInImage(firebaseVisionImage).addOnSuccessListener(firebaseVisionText -> {
-            displayImageText(firebaseVisionText);
-        }).addOnFailureListener(e -> { // Failure listener
-            Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Please check if the image taken is correct and contains words.");
+        builder.setCancelable(true);
+
+        builder.setPositiveButton("Confirm", (dialog, which) -> {
+            dialog.cancel();
+            FirebaseVisionImage firebaseVisionImage = FirebaseVisionImage.fromBitmap(imageBitmap);
+            FirebaseVisionTextDetector firebaseVisionTextDetector = FirebaseVision.getInstance().getVisionTextDetector();
+            firebaseVisionTextDetector.detectInImage(firebaseVisionImage).addOnSuccessListener(firebaseVisionText -> {
+                displayImageText(firebaseVisionText);
+            }).addOnFailureListener(e -> { // Failure listener
+                Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
         });
+
+        builder.setNegativeButton("Go Back", (dialog, which) -> {
+            dialog.cancel();
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void displayImageText(FirebaseVisionText firebaseVisionText) {
@@ -169,8 +180,15 @@ public class MainActivity extends AppCompatActivity {
                 String[] textArray = block.getText().split("\\r?\\n");
                 words.addAll(Arrays.asList(textArray));
             }
+            // Remove all unwanted words from the word list (Based on unwanted String array)
             for (String unwanted: unwantedWords) {
                 words.remove(unwanted);
+            }
+            // Remove the "A1C" substring from the A1C data values
+            for (int i = 0; i < words.size(); i++) {
+                if (words.get(i).contains("A1C")){
+                    words.set(i, words.get(i).replace("A1C", ""));
+                }
             }
 
             // Transfers desired values from image to Form Activity & finishes this activity to reset data

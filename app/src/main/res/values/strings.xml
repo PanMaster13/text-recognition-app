@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">HbA1c Image Extractor</string>
+
+    // String values for Main Activity
+    <string name="image_description">View that displays captured image</string>
+    <string name="take_pic_btn_text">Take Picture</string>
+    <string name="extract_txt_btn_text">Extract Text From Image</string>
+
+    // String values for Form Activity
+    <string name="time_hint">Time</string>
+    <string name="date_hint">Date</string>
+    <string name="a1c_hint_1">A1C (%)</string>
+    <string name="a1c_hint_2">A1C (mmol/mol)</string>
+    <string name="lot_hint">Lot View</string>
+    <string name="inst_id_hint">Inst ID</string>
+    <string name="test_id_hint">Test ID</string>
+    <string name="operator_hint">Operator</string>
+    <string name="submit_btn_text">Submit</string>
 </resources>
