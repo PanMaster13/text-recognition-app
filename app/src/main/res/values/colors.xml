@@ -10,7 +10,9 @@
     <color name="white">#FFFFFFFF</color>
 
     // Custom Colors
-    <color name="custom_white">#F9FCFB</color>
+    <color name="custom_white">#F4F9F9</color>
+    <color name="custom_light_blue">#CCF2F4</color>
+    <color name="custom_blue">#A4EBF3</color>
     <color name="custom_light_green">#B0EACD</color>
     <color name="custom_heavy_green">#21BF73</color>
     <color name="custom_red">#fd5e53</color>

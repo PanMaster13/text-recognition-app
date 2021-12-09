@@ -14,6 +14,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -30,18 +33,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
     // Variable declaration
-    private Button captureImageBtn, extractTextBtn;
+    private Button captureImageBtn;
     private ImageView capturedImage;
     private Bitmap imageBitmap;
+    private ViewGroup progressView;
     private ArrayList<String> words = new ArrayList<>();
     private final String[] unwantedWords = {"Quo-Lab A1C", "Time", "Time:", "Date", "Date:", "Result", "Result:", "DCCT", "IFCC", "Lot", "Lot:", "Inst ID", "Inst ID:", "Test ID", "Test ID:", "Operator", "Operator:"};
 
     private String mCurrentPhotoPath;
-
+    private boolean isProgressShown = false;
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
@@ -49,9 +54,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Hides progress bar by default
+        hideProgressView();
+
+        // Linking variables to XML
         capturedImage = findViewById(R.id.capturedImage);
         captureImageBtn = findViewById(R.id.captureImageBtn);
-        extractTextBtn = findViewById(R.id.extractTextBtn);
         imageBitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.placeholder);
         capturedImage.setImageBitmap(imageBitmap);
 
@@ -59,13 +67,9 @@ public class MainActivity extends AppCompatActivity {
         captureImageBtn.setOnClickListener(v -> {
             dispatchTakePictureIntent();
         });
-
-        // Calls function to utilise Firebase Vision ML Kit text recognition to extract text from image
-        extractTextBtn.setOnClickListener(v -> {
-            extractTextFromImage();
-        });
     }
 
+    // 'dispatchTakePictureIntent()', 'createImageFile()', 'galleryAddPic()', 'setPic()', and 'onActivityResult()' taken from https://developer.android.com/training/camera/photobasics
     // Function for launching camera activity to capture image
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -89,12 +93,12 @@ public class MainActivity extends AppCompatActivity {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(new Date());
         String imageFileName = "HbA1c_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
+                ".jpg",   /* suffix */
                 storageDir      /* directory */
         );
 
@@ -143,39 +147,38 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             galleryAddPic();
             setPic();
+
+            // Calls function to utilise Firebase Vision ML Kit text recognition to extract text from image
+            extractTextFromImage();
         }
     }
 
-    // Function to extract text from image
+    // 'extractTextFromImage()', & 'getImageText()' taken from https://www.youtube.com/watch?v=fmTlgwgKJmE
     private void extractTextFromImage() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Please check if the image taken is correct and contains words.");
-        builder.setCancelable(true);
+        // Show progress bar
+        showProgressView();
 
-        builder.setPositiveButton("Confirm", (dialog, which) -> {
-            dialog.cancel();
-            FirebaseVisionImage firebaseVisionImage = FirebaseVisionImage.fromBitmap(imageBitmap);
-            FirebaseVisionTextDetector firebaseVisionTextDetector = FirebaseVision.getInstance().getVisionTextDetector();
-            firebaseVisionTextDetector.detectInImage(firebaseVisionImage).addOnSuccessListener(firebaseVisionText -> {
-                displayImageText(firebaseVisionText);
-            }).addOnFailureListener(e -> { // Failure listener
-                Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            });
+        // Remove all previous values in 'words' arraylist
+        words.removeAll(words);
+
+        // Uses FirebaseVision library to extract text from image
+        FirebaseVisionImage firebaseVisionImage = FirebaseVisionImage.fromBitmap(imageBitmap);
+        FirebaseVisionTextDetector firebaseVisionTextDetector = FirebaseVision.getInstance().getVisionTextDetector();
+        firebaseVisionTextDetector.detectInImage(firebaseVisionImage).addOnSuccessListener(firebaseVisionText -> {
+            getImageText(firebaseVisionText);
+        }).addOnFailureListener(e -> { // Failure listener
+            Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         });
-
-        builder.setNegativeButton("Go Back", (dialog, which) -> {
-            dialog.cancel();
-        });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
     }
 
-    private void displayImageText(FirebaseVisionText firebaseVisionText) {
+    private void getImageText(FirebaseVisionText firebaseVisionText) {
         List<FirebaseVisionText.Block> blockList = firebaseVisionText.getBlocks();
         if (blockList.size() == 0) {
             Toast.makeText(getApplicationContext(), "Error: No text found in image provided!", Toast.LENGTH_SHORT).show();
+            // Hide progress bar
+            hideProgressView();
         } else {
+            // Gets raw string data from each block and put into 'words' arraylist
             for (FirebaseVisionText.Block block: firebaseVisionText.getBlocks()) {
                 String[] textArray = block.getText().split("\\r?\\n");
                 words.addAll(Arrays.asList(textArray));
@@ -184,18 +187,39 @@ public class MainActivity extends AppCompatActivity {
             for (String unwanted: unwantedWords) {
                 words.remove(unwanted);
             }
-            // Remove the "A1C" substring from the A1C data values
-            for (int i = 0; i < words.size(); i++) {
-                if (words.get(i).contains("A1C")){
-                    words.set(i, words.get(i).replace("A1C", ""));
-                }
-            }
 
-            // Transfers desired values from image to Form Activity & finishes this activity to reset data
-            Intent toFormIntent = new Intent(getApplicationContext(), FormActivity.class);
-            toFormIntent.putStringArrayListExtra("data", words);
-            startActivity(toFormIntent);
-            finish();
+            // Checks the number of values remaining (Should only be 7 values)
+            if (words.size() != 7) {
+                Toast.makeText(getApplicationContext(), "Error: Incorrect number of values found, please retake the picture of a HbA1c result slip.", Toast.LENGTH_SHORT).show();
+                // Hide progress bar
+                hideProgressView();
+            } else {
+                // Hide progress bar
+                hideProgressView();
+
+                 // Transfers desired values from image to Form Activity
+                Intent toFromIntent = new Intent(getApplicationContext(), FormActivity.class);
+                toFromIntent.putExtra("words", words);
+                startActivity(toFromIntent);
+                finish();
+            }
         }
+    }
+
+    public void showProgressView() {
+        if (!isProgressShown) {
+            isProgressShown = true;
+            progressView = (ViewGroup) getLayoutInflater().inflate(R.layout.progressbar_layout, null);
+            View v = this.findViewById(android.R.id.content).getRootView();
+            ViewGroup viewGroup = (ViewGroup) v;
+            viewGroup.addView(progressView);
+        }
+    }
+
+    public void hideProgressView() {
+        View v = this.findViewById(android.R.id.content).getRootView();
+        ViewGroup viewGroup = (ViewGroup) v;
+        viewGroup.removeView(progressView);
+        isProgressShown = false;
     }
 }

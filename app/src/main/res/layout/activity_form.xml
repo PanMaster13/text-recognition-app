@@ -11,38 +11,42 @@
         android:id="@+id/timeView"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/dateView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/resultView1"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/custom_heavy_green"
-        android:textColorHint="@color/custom_indigo">
+        android:layout_marginRight="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="@string/time_hint" />
+            android:layout_height="match_parent"
+            android:hint="@string/time_hint"
+            android:paddingTop="20dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dateView"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:layout_constraintLeft_toRightOf="@id/timeView"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/resultView2"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/custom_heavy_green"
-        android:textColorHint="@color/custom_indigo">
+        android:layout_marginRight="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="@string/date_hint" />
+            android:layout_height="match_parent"
+            android:hint="@string/date_hint"
+            android:paddingTop="20dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -50,114 +54,126 @@
         android:id="@+id/resultView1"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/resultView2"
         app:layout_constraintTop_toBottomOf="@id/timeView"
         app:layout_constraintBottom_toTopOf="@id/lotView"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/custom_heavy_green"
-        android:textColorHint="@color/custom_indigo">
+        android:layout_marginRight="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="@string/a1c_hint_1" />
+            android:layout_height="match_parent"
+            android:hint="@string/a1c_hint_1"
+            android:paddingTop="20dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/resultView2"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:layout_constraintLeft_toRightOf="@id/resultView1"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dateView"
         app:layout_constraintBottom_toTopOf="@id/instIdView"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/custom_heavy_green"
-        android:textColorHint="@color/custom_indigo">
+        android:layout_marginRight="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="@string/a1c_hint_2" />
+            android:layout_height="match_parent"
+            android:hint="@string/a1c_hint_2"
+            android:paddingTop="20dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/lotView"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/instIdView"
         app:layout_constraintTop_toBottomOf="@id/resultView1"
         app:layout_constraintBottom_toTopOf="@id/testIdView"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/custom_heavy_green"
-        android:textColorHint="@color/custom_indigo">
+        android:layout_marginRight="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="@string/lot_hint" />
+            android:layout_height="match_parent"
+            android:hint="@string/lot_hint"
+            android:paddingTop="20dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/instIdView"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:layout_constraintLeft_toRightOf="@id/lotView"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/resultView2"
         app:layout_constraintBottom_toTopOf="@id/operatorView"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/custom_heavy_green"
-        android:textColorHint="@color/custom_indigo">
+        android:layout_marginRight="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="@string/inst_id_hint" />
+            android:layout_height="match_parent"
+            android:hint="@string/inst_id_hint"
+            android:paddingTop="20dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/testIdView"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/operatorView"
         app:layout_constraintTop_toBottomOf="@id/lotView"
         app:layout_constraintBottom_toTopOf="@id/submitBtn"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/custom_heavy_green"
-        android:textColorHint="@color/custom_indigo">
+        android:layout_marginRight="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="@string/test_id_hint" />
+            android:layout_height="match_parent"
+            android:hint="@string/test_id_hint"
+            android:paddingTop="20dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/operatorView"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:layout_constraintLeft_toRightOf="@id/testIdView"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/instIdView"
         app:layout_constraintBottom_toTopOf="@id/submitBtn"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/custom_heavy_green"
-        android:textColorHint="@color/custom_indigo">
+        android:layout_marginRight="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="@string/operator_hint" />
+            android:layout_height="match_parent"
+            android:hint="@string/operator_hint"
+            android:paddingTop="20dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -169,8 +185,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/operatorView"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/button_style"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@android:color/holo_orange_light"/>
+        android:layout_marginRight="10dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
