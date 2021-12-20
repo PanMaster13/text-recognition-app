@@ -4,9 +4,7 @@
     // String values for Main Activity
     <string name="image_description">View that displays captured image</string>
     <string name="take_pic_btn_text">Take Picture</string>
-    <string name="extract_txt_btn_text">Extract Text From Image</string>
-
-    // String values for Form Activity
+    <string name="form_title">HbA1c Result Data</string>
     <string name="time_hint">Time</string>
     <string name="date_hint">Date</string>
     <string name="a1c_hint_1">A1C (%)</string>

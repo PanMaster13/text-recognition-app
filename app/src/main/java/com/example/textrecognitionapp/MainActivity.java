@@ -1,8 +1,10 @@
 package com.example.textrecognitionapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -15,12 +17,16 @@ import androidx.core.content.FileProvider;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
@@ -45,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> words = new ArrayList<>();
     private final String[] unwantedWords = {"Quo-Lab A1C", "Time", "Time:", "Date", "Date:", "Result", "Result:", "DCCT", "IFCC", "Lot", "Lot:", "Inst ID", "Inst ID:", "Test ID", "Test ID:", "Operator", "Operator:"};
 
+    private ArrayList<TextInputLayout> textInputLayouts = new ArrayList<>();
+    private TextInputLayout timeView, dateView, resultView1, resultView2, lotView, instIdView, testIdView, operatorView;
+    private Button submitBtn;
+
     private String mCurrentPhotoPath;
     private boolean isProgressShown = false;
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -62,10 +72,33 @@ public class MainActivity extends AppCompatActivity {
         captureImageBtn = findViewById(R.id.captureImageBtn);
         imageBitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.placeholder);
         capturedImage.setImageBitmap(imageBitmap);
+        timeView = findViewById(R.id.timeView);
+        dateView = findViewById(R.id.dateView);
+        resultView1 = findViewById(R.id.resultView1);
+        resultView2 = findViewById(R.id.resultView2);
+        lotView = findViewById(R.id.lotView);
+        instIdView = findViewById(R.id.instIdView);
+        testIdView = findViewById(R.id.testIdView);
+        operatorView = findViewById(R.id.operatorView);
+        submitBtn = findViewById(R.id.submitBtn);
+
+        // Adding text input layout views into array
+        textInputLayouts.add(timeView);
+        textInputLayouts.add(dateView);
+        textInputLayouts.add(resultView1);
+        textInputLayouts.add(resultView2);
+        textInputLayouts.add(lotView);
+        textInputLayouts.add(instIdView);
+        textInputLayouts.add(testIdView);
+        textInputLayouts.add(operatorView);
 
         // Calls camera activity function when 'Take Picture' button is pressed
         captureImageBtn.setOnClickListener(v -> {
             dispatchTakePictureIntent();
+        });
+
+        submitBtn.setOnClickListener(v -> {
+            submitValidation();
         });
     }
 
@@ -171,8 +204,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // Function to validate data from Firebase Vision ML Kit and set values to text input layouts
     private void getImageText(FirebaseVisionText firebaseVisionText) {
+        // Get blocks of extracted text
         List<FirebaseVisionText.Block> blockList = firebaseVisionText.getBlocks();
+
+        // No blocks (Image contains no text)
         if (blockList.size() == 0) {
             Toast.makeText(getApplicationContext(), "Error: No text found in image provided!", Toast.LENGTH_SHORT).show();
             // Hide progress bar
@@ -197,15 +234,68 @@ public class MainActivity extends AppCompatActivity {
                 // Hide progress bar
                 hideProgressView();
 
-                 // Transfers desired values from image to Form Activity
-                Intent toFromIntent = new Intent(getApplicationContext(), FormActivity.class);
-                toFromIntent.putExtra("words", words);
-                startActivity(toFromIntent);
-                finish();
+                // Remove the "A1C" substring from the A1C data values
+                for (int i = 0; i < words.size(); i++) {
+                    if (words.get(i).contains("A1C")){
+                        words.set(i, words.get(i).replace("A1C", ""));
+                    }
+                }
+                // Removes the '%' and 'mmol/mol' section of the result data
+                words.set(2, words.get(2).replace("%", ""));
+                words.set(3, words.get(3).split("m")[0]);
+
+                // Loop through word list and fills the text input layouts
+                for (int i = 0; i < words.size(); i++) {
+                    textInputLayouts.get(i).getEditText().setText(words.get(i));
+                }
+
             }
         }
     }
 
+    // Validate form values before submitting it to the database
+    private void submitValidation() {
+        boolean formIsValid = false;
+
+        // Check for empty values in the text input layouts
+        for (int i = 0; i < textInputLayouts.size(); i++) {
+            String text = textInputLayouts.get(i).getEditText().getText().toString();
+            if (text.equals("")) {
+                formIsValid = false;
+                break;
+            } else {
+                formIsValid = true;
+            }
+        }
+
+        if (formIsValid) { // No empty values found (Shows confirmation alert box before submitting)
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Please confirm that all values are correct before submitting.");
+            builder.setCancelable(true);
+
+            // Uploads data to database (To be implemented) & resets image and text input layout values to default values
+            builder.setPositiveButton("Confirm", (dialog, which) -> {
+                dialog.cancel();
+                Toast.makeText(getApplicationContext(), "Uploading data to database.", Toast.LENGTH_SHORT).show();
+                capturedImage.setImageResource(R.drawable.placeholder);
+                for (int i = 0; i < textInputLayouts.size(); i++) {
+                    textInputLayouts.get(i).getEditText().setText("");
+                }
+            });
+
+            // Closes alert dialog
+            builder.setNegativeButton("Go Back", (dialog, which) -> {
+                dialog.cancel();
+            });
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        } else { // Empty value found
+            Toast.makeText(getApplicationContext(), "There are empty values found, please make sure that they are filled in.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Function to show the progress spinner view
     public void showProgressView() {
         if (!isProgressShown) {
             isProgressShown = true;
@@ -216,10 +306,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Function to hide the progress spinner view
     public void hideProgressView() {
         View v = this.findViewById(android.R.id.content).getRootView();
         ViewGroup viewGroup = (ViewGroup) v;
         viewGroup.removeView(progressView);
         isProgressShown = false;
+    }
+
+    // Un-focuses on the text input layouts when any whitespace is clicked on
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if ( v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int)ev.getRawX(), (int)ev.getRawY())) {
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

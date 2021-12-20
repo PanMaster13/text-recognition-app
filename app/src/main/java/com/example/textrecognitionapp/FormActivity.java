@@ -59,7 +59,7 @@ public class FormActivity extends AppCompatActivity {
         textInputLayouts.add(testIdView);
         textInputLayouts.add(operatorView);
 
-         // Remove the "A1C" substring from the A1C data values
+        // Remove the "A1C" substring from the A1C data values
         for (int i = 0; i < words.size(); i++) {
             if (words.get(i).contains("A1C")){
                 words.set(i, words.get(i).replace("A1C", ""));
