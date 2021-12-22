@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             photoFile = createImageFile();
         } catch (IOException ex) {
             // Error occurred while creating the File
-            Toast.makeText(getApplicationContext(), "Error: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Error: " + ex.getMessage(), Toast.LENGTH_LONG).show();
         }
         // Continue only if the File was successfully created
         if (photoFile != null) {
@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
 
         // No blocks (Image contains no text)
         if (blockList.size() == 0) {
-            Toast.makeText(getApplicationContext(), "Error: No text found in image provided!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Error: No text found in image provided!", Toast.LENGTH_LONG).show();
             // Hide progress bar
             hideProgressView();
         } else {
@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Checks the number of values remaining (Should only be 7 values)
             if (words.size() != 7) {
-                Toast.makeText(getApplicationContext(), "Error: Incorrect number of values found, please retake the picture of a HbA1c result slip.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Error: Incorrect number of values found, please retake the picture of a HbA1c result slip.", Toast.LENGTH_LONG).show();
                 // Hide progress bar
                 hideProgressView();
             } else {
@@ -291,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
         } else { // Empty value found
-            Toast.makeText(getApplicationContext(), "There are empty values found, please make sure that they are filled in.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "There are empty values found, please make sure that they are filled in.", Toast.LENGTH_LONG).show();
         }
     }
 
